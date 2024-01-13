@@ -1,6 +1,3 @@
-# SailingMap-Project
-
-
 
 # College Nationals Sailing Race Viewer
 
