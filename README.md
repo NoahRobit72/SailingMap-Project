@@ -19,7 +19,7 @@ Leaderboard: Keep an eye on the leaderboard to see which teams are leading the p
 
 Interactive Experience: Enjoy an immersive experience with interactive maps, dynamic visuals, and real-time updates. Zoom in to get a closer look or pan around to explore different parts of the race course.
 
-[![Watch the video](./static/frontPage.png)]([./static/SailDemo.mp4](https://drive.google.com/file/d/1lX5PgYQeZrsxNtr79FXitlPQqmSk4Geb/view?usp=sharing))
+[![Watch the video](./static/frontPage.png)](https://drive.google.com/file/d/1lX5PgYQeZrsxNtr79FXitlPQqmSk4Geb/view?usp=sharing)
 
 
 
