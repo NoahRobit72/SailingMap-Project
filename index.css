@@ -1,17 +1,14 @@
-/* 
- * Always set the map height explicitly to define the size of the div element
- * that contains the map. 
- */
- #map {
-    height: 100%;
-  }
-  
-  /* 
-   * Optional: Makes the sample page fill the window. 
-   */
-  html,
-  body {
-    height: 100%;
-    margin: 0;
-    padding: 0;
-  }
+#map-container {
+  border: 2px solid #ccc; /* Add border to the container */
+  border-radius: 5px; /* Optional: Add border-radius for rounded corners */
+  margin: 10%; /* Optional: Add margin for spacing */
+  margin-top: 4%; /* Optional: Add margin for spacing */
+  margin-bottom: 10%;
+
+}
+
+#map-title {
+  text-align: center; /* Center the title */
+  font-size: 18px;
+  font-weight: bold;
+}
