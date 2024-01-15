@@ -7,21 +7,21 @@ L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
 
 // Define a custom marker icon
 var mark = L.icon({
-    iconUrl: '../static/graphics/mark.png', // Specify the path to your custom icon image
+    iconUrl: './static/graphics/mark.png', // Specify the path to your custom icon image
     iconSize: [20, 20], // Size of the icon
     iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
     popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
 });
 
 var pinFlag = L.icon({
-    iconUrl: '../static/graphics/pinFlag.png', // Specify the path to your custom icon image
+    iconUrl: './static/graphics/pinFlag.png', // Specify the path to your custom icon image
     iconSize: [20, 20], // Size of the icon
     iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
     popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
 });
 
 var rcBoat = L.icon({
-    iconUrl: '../static/graphics/RCBoat.png', // Specify the path to your custom icon image
+    iconUrl: './static/graphics/RCBoat.png', // Specify the path to your custom icon image
     iconSize: [30, 30], // Size of the icon
     iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
     popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
@@ -58,7 +58,7 @@ var line = L.polyline([
 var sailBoat1 = L.marker(boat1, {
     icon: L.divIcon({
         className: 'custom-div-icon',
-        html: "<img src='../static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
         iconSize: [20, 20],
         iconAnchor: [10, 10],
     })
@@ -69,7 +69,7 @@ var sailBoat1 = L.marker(boat1, {
 var sailBoat2 = L.marker(boat2, {
     icon: L.divIcon({
         className: 'custom-div-icon',
-        html: "<img src='../static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
         iconSize: [20, 20],
         iconAnchor: [10, 10],
     })
@@ -78,7 +78,7 @@ var sailBoat2 = L.marker(boat2, {
 var sailBoat3 = L.marker(boat3, {
     icon: L.divIcon({
         className: 'custom-div-icon',
-        html: "<img src='../static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
         iconSize: [20, 20],
         iconAnchor: [10, 10],
     })
