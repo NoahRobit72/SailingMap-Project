@@ -1,100 +1,139 @@
 
-// Create the Map
-var map = L.map('map').setView([42.356365, -71.085250], 16.2);
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    attribution: '&copy; OpenStreetMap contributors'
-}).addTo(map);
-
-// Define a custom marker icon
-var mark = L.icon({
-    iconUrl: './static/graphics/mark.png', // Specify the path to your custom icon image
-    iconSize: [20, 20], // Size of the icon
-    iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
-    popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
-});
-
-var pinFlag = L.icon({
-    iconUrl: './static/graphics/pinFlag.png', // Specify the path to your custom icon image
-    iconSize: [20, 20], // Size of the icon
-    iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
-    popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
-});
-
-var rcBoat = L.icon({
-    iconUrl: './static/graphics/RCBoat.png', // Specify the path to your custom icon image
-    iconSize: [30, 30], // Size of the icon
-    iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
-    popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
-});
-
-// init a var
 var rotationDegrees = 0;
 
 
-// Setup for a traingle Course
-var markCord = { lat: 42.357908, lon: -71.084098 }
-var pinFlagCord = { lat: 42.356144, lon: -71.090297 }
-var RCBoatCord = { lat: 42.354287, lon: -71.087197 }
-// Coming soon: Gates, offset, trap courses
+async function initializeMap() {
+    try {
+        // Print Map
+        var map = L.map('map').setView([42.356365, -71.085250], 16.2);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {attribution: '&copy; OpenStreetMap contributors'}).addTo(map);
+        console.log("1");
+        const config = await configureMarks();
+        console.log("1");
 
-// Boats Start
-var boat1 = { lat: 42.35573945, lon: -71.08950355 }
-var boat2 = { lat: 42.3553349, lon: -71.0887091 }
-var boat3 = { lat: 42.35493035, lon: -71.08791465 }
+        const pinResponse = await fetch('/.netlify/functions/getPinCord');
+        const pinCord = await pinResponse.json();  // Use await to get the JSON data
 
-L.marker(markCord, { icon: mark }).addTo(map);
-L.marker(pinFlagCord, { icon: pinFlag }).addTo(map);
-L.marker(RCBoatCord, { icon: rcBoat }).addTo(map);
+        const markResponse = await fetch('/.netlify/functions/getMarkCord');
+        const markCord = await markResponse.json();  // Use await to get the JSON data
 
-// Starting Line
-var line = L.polyline([
-    pinFlagCord,  // Starting point
-    RCBoatCord  // Ending point
-], {
-    color: 'blue', // Line color
-    dashArray: '10, 5', // Dash pattern (10 pixels dash, 5 pixels gap)
-}).addTo(map);
-
-var sailBoat1 = L.marker(boat1, {
-    icon: L.divIcon({
-        className: 'custom-div-icon',
-        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-    })
-}).addTo(map);
+        const boatResponse = await fetch('/.netlify/functions/getBoatCord');
+        const RCBoatCord = await boatResponse.json();  // Use await to get the JSON data
 
 
+        console.log("1");
 
-var sailBoat2 = L.marker(boat2, {
-    icon: L.divIcon({
-        className: 'custom-div-icon',
-        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-    })
-}).addTo(map);
+        await placeMarks(map, markCord, pinCord,  RCBoatCord, config.mark, config.pin, config.rcBoat);
+        console.log("1");
 
-var sailBoat3 = L.marker(boat3, {
-    icon: L.divIcon({
-        className: 'custom-div-icon',
-        html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
-        iconSize: [20, 20],
-        iconAnchor: [10, 10],
-    })
-}).addTo(map);
+        const {sailBoat1, sailBoat2, sailBoat3} = await updateBoats(map);
+        return {sailBoat1, sailBoat2, sailBoat3};
 
 
-// Boats End
+    } catch (error) {
+        console.error("hello it failed you fuck");
+    }
+};
+
+// First we inilize the map and the course
+const {sailBoat1, sailBoat2, sailBoat3} = await initializeMap();
+console.log(sailBoat1);
+setInterval(() => {
+    moveMarker(sailBoat1, sailBoat2, sailBoat3);
+}, 1000);
+
+
+// Then we update the boats every second
+
+async function updateBoats(map){
+    var boat1 = { lat: 42.35573945, lon: -71.08950355 };
+    var boat2 = { lat: 42.3553349, lon: -71.0887091 };
+    var boat3 = { lat: 42.35493035, lon: -71.08791465 };
+
+    const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
+    return {sailBoat1, sailBoat2, sailBoat3};
+};
+
+
+// This will configure the pictures and return them as objects
+async function configureMarks() {
+    // Define a custom marker icon
+    var mark = L.icon({
+        iconUrl: './static/graphics/mark.png', // Specify the path to your custom icon image
+        iconSize: [20, 20], // Size of the icon
+        iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
+        popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
+    });
+
+    var pin = L.icon({
+        iconUrl: './static/graphics/pinFlag.png', // Specify the path to your custom icon image
+        iconSize: [20, 20], // Size of the icon
+        iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
+        popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
+    });
+
+    var rcBoat = L.icon({
+        iconUrl: './static/graphics/RCBoat.png', // Specify the path to your custom icon image
+        iconSize: [30, 30], // Size of the icon
+        iconAnchor: [15, 15], // Point of the icon that corresponds to the marker's location
+        popupAnchor: [0, -15] // Point from which the popup should open relative to the iconAnchor
+    });
+
+    return {mark,pin,rcBoat};
+}
+
+// This will palce the marks given objects
+async function placeMarks(map, markCord, pinCord, RCBoatCord, mark, pin, rcBoat){
+    L.marker(markCord, { icon: mark }).addTo(map);
+    L.marker(pinCord, { icon: pin }).addTo(map);
+    L.marker(RCBoatCord, { icon: rcBoat }).addTo(map);
+
+    // Starting Line
+    L.polyline([pinCord, RCBoatCord], {color: 'blue', dashArray: '10, 5'}).addTo(map);
+}
+
+// given the lon and lab of the boats, this will place them on the map. (configure and place)
+async function placeBoats (map, boat1, boat2, boat3){
+    var sailBoat1 = L.marker(boat1, {
+        icon: L.divIcon({
+            className: 'custom-div-icon',
+            html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+        })
+    }).addTo(map);
+    
+    var sailBoat2 = L.marker(boat2, {
+        icon: L.divIcon({
+            className: 'custom-div-icon',
+            html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+        })
+    }).addTo(map);
+    
+    var sailBoat3 = L.marker(boat3, {
+        icon: L.divIcon({
+            className: 'custom-div-icon',
+            html: "<img src='./static/graphics/basicSailboat.png' style='width: 20px; height: 20px;'>",
+            iconSize: [20, 20],
+            iconAnchor: [10, 10],
+        })
+    }).addTo(map);
+
+    return {sailBoat1, sailBoat2, sailBoat3}
+}
+
 
 // testing function
-function moveMarker(){
+function moveMarker(sailBoat1, sailBoat2, sailBoat3){
+
     // Update coordinates (you can implement your logic here)
     var newLat1 = sailBoat1.getLatLng().lat + 0.0001;
     var newLng1 = sailBoat1.getLatLng().lng + 0.0001;
 
-    var newLat2 = sailBoat2.getLatLng().lat + 0.0001;
     var newLng2 = sailBoat2.getLatLng().lng + 0.0001;
+    var newLat2 = sailBoat2.getLatLng().lat + 0.0001;
 
     var newLat3 = sailBoat3.getLatLng().lat + 0.0001;
     var newLng3 = sailBoat3.getLatLng().lng + 0.0001;
@@ -124,6 +163,25 @@ function moveMarker(){
     imgElement1.style.transform = 'rotate(' + rotationDegrees1 + 'deg)';
     imgElement2.style.transform = 'rotate(' + rotationDegrees2 + 'deg)';
     imgElement3.style.transform = 'rotate(' + rotationDegrees3 + 'deg)';
+
 } 
 // Set an interval to update the marker every 1000 milliseconds (1 second)
-setInterval(moveMarker, 1000);
+
+
+
+
+
+// fetch the pin cordinates from the sever
+async function fetchDataFromServer(){
+    try {
+        // Use fetch to make a request to the serverless function endpoint
+        const response = await fetch('/.netlify/functions/getPinCord');
+
+        // Parse the JSON response
+        const data = await response.json();
+
+        return data
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+};
