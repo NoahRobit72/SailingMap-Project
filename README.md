@@ -5,7 +5,7 @@ Welcome to the College Nationals Sailing Race Viewer, your go-to app for trackin
 
 Whether you're a participant, a sailing enthusiast, or just curious about the action on the water, our app provides a dynamic and interactive experience to keep you engaged with the regatta.
 
-### Features:
+### Diagram:
 Our product includes GPS devcies to measure the position of each boat, a database to store the data, and a website to display the data.
 
 ![Watch the video](./public/static/diagram.png)
