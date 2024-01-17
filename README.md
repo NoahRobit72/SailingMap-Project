@@ -1,5 +1,6 @@
 
-# College Nationals Sailing Race Viewer
+# [College Nationals Sailing Race Viewer](https://sailviewer.netlify.app/)
+
 
 Welcome to the College Nationals Sailing Race Viewer, your go-to app for tracking and visualizing the exciting sailing races happening at the 2024 College Nationals! 
 
