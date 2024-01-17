@@ -1,7 +1,6 @@
 
 var rotationDegrees = 0;
 
-
 async function initializeMap() {
     try {
         // Print Map
@@ -26,7 +25,9 @@ async function initializeMap() {
         await placeMarks(map, markCord, pinCord,  RCBoatCord, config.mark, config.pin, config.rcBoat);
         console.log("1");
 
+        console.log("all good before boats data");
         const {sailBoat1, sailBoat2, sailBoat3} = await updateBoats(map);
+        console.log("this is after boats data trying for boats data");
         return {sailBoat1, sailBoat2, sailBoat3};
 
 
@@ -45,14 +46,51 @@ setInterval(() => {
 
 // Then we update the boats every second
 
-async function updateBoats(map){
-    var boat1 = { lat: 42.35573945, lon: -71.08950355 };
-    var boat2 = { lat: 42.3553349, lon: -71.0887091 };
-    var boat3 = { lat: 42.35493035, lon: -71.08791465 };
+// async function updateBoats(map){
+//     boatData = await fetch('/.netlify/functions/getRacingCord');
+//     console.log(boatData);
 
-    const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
-    return {sailBoat1, sailBoat2, sailBoat3};
-};
+//     var boat1 = { lat: 42.35573945, lon: -71.08950355 };
+//     var boat2 = { lat: 42.3553349, lon: -71.0887091 };
+//     var boat3 = { lat: 42.35493035, lon: -71.08791465 };
+
+//     const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
+//     return {sailBoat1, sailBoat2, sailBoat3};
+// };
+
+async function updateBoats(map){
+    try {
+        console.log("entered the UpdateBoats Function")
+        const boatDataResponse = await fetch('/.netlify/functions/getRacingCord');
+        if (!boatDataResponse.status == 200) {
+            throw new Error(`Failed to fetch boat data. Status: ${boatDataResponse.status}`);
+        }
+        console.log("after the UpdateBoats Function")
+
+
+        const boatData = await boatDataResponse.json();
+        console.log(boatData);
+        console.log(boatData[1]);
+
+        // if (!boatData || !boatData.sailBoats || !Array.isArray(boatData.sailBoats) || boatData.sailBoats.length !== 3) {
+        //     throw new Error("Invalid boat data received");
+        // }
+
+
+
+
+
+        // const [boat1, boat2, boat3] = boatData.sailBoats;
+
+        // const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
+        // return {sailBoat1, sailBoat2, sailBoat3};
+        return boatDataResponse;
+
+    } catch (error) {
+        console.error("Error updating boats:", error);
+        throw error; // Rethrow the error to indicate failure
+    }
+}
 
 
 // This will configure the pictures and return them as objects
@@ -185,3 +223,12 @@ async function fetchDataFromServer(){
         console.error('Error fetching data:', error);
     }
 };
+
+function boatList(name, cords) {
+    return { name, cords};
+  }
+  
+  // Function to create an address
+function cordList(lat, lon, angle) {
+    return { lat, lon, angle };
+  }

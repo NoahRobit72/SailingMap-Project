@@ -21,7 +21,40 @@ const getCords = async (client, inputCourseElement) => {
     return result[0].Location;
 }
 
+
+async function getBoatsData(client) {
+  try {
+    const collection = client.db('HomePage').collection('Page1');
+    const result = await collection.aggregate([
+        {
+            $unwind: "$Location"
+        },
+        {
+            $group: {
+                _id: "$BoatNum",
+                Location: {
+                    $push: {
+                        Lat: "$Location.lat",
+                        Lon: "$Location.lon",
+                        Angle: "$Location.Angle"
+                    }
+                }
+            }
+        }
+    ]).toArray();
+    await client.close();
+
+    return result
+  } catch(error) {
+    Console.log("There was an error");
+  }
+}
+
+
+
+
 module.exports = {
     connectToDatabase,
-    getCords
+    getCords,
+    getBoatsData
 }
