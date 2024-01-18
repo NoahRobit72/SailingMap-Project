@@ -34,9 +34,9 @@ async function getBoatsData(client) {
                 _id: "$BoatNum",
                 Location: {
                     $push: {
-                        Lat: "$Location.lat",
-                        Lon: "$Location.lon",
-                        Angle: "$Location.Angle"
+                        lat: "$Location.lat",
+                        lon: "$Location.lon",
+                        angle: "$Location.Angle"
                     }
                 }
             }

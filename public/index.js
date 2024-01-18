@@ -28,6 +28,7 @@ async function initializeMap() {
         console.log("all good before boats data");
         const {sailBoat1, sailBoat2, sailBoat3} = await updateBoats(map);
         console.log("this is after boats data trying for boats data");
+        console.log(sailBoat1, sailBoat2, sailBoat3);
         return {sailBoat1, sailBoat2, sailBoat3};
 
 
@@ -69,22 +70,14 @@ async function updateBoats(map){
 
 
         const boatData = await boatDataResponse.json();
-        console.log(boatData);
-        console.log(boatData[1]);
 
-        // if (!boatData || !boatData.sailBoats || !Array.isArray(boatData.sailBoats) || boatData.sailBoats.length !== 3) {
-        //     throw new Error("Invalid boat data received");
-        // }
+        const boat1 = cordList(boatData[0].Location[0].lat, boatData[0].Location[0].lon)
+        const boat2 = cordList(boatData[1].Location[0].lat, boatData[1].Location[0].lon)
+        const boat3 = cordList(boatData[2].Location[0].lat, boatData[2].Location[0].lon)
 
 
-
-
-
-        // const [boat1, boat2, boat3] = boatData.sailBoats;
-
-        // const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
-        // return {sailBoat1, sailBoat2, sailBoat3};
-        return boatDataResponse;
+        const {sailBoat1, sailBoat2, sailBoat3} = await placeBoats(map, boat1, boat2, boat3);
+        return {sailBoat1, sailBoat2, sailBoat3};
 
     } catch (error) {
         console.error("Error updating boats:", error);
@@ -230,5 +223,5 @@ function boatList(name, cords) {
   
   // Function to create an address
 function cordList(lat, lon, angle) {
-    return { lat, lon, angle };
+    return { lat, lon};
   }
