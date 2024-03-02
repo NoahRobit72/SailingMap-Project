@@ -54,7 +54,7 @@ setInterval(async () => {
     } catch (error) {
         console.error("Error fetching CSV data:", error);
     }
-}, 1000);
+}, 300);
 
 
 
