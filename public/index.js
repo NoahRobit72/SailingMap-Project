@@ -46,9 +46,7 @@ var count = 0;
 const {sailBoat1} = await initializeMap();
 setInterval(async () => {
     count = count + 1;
-    if (count > 100){
-        count = 0;
-    }
+
     console.log("updating display");
     try {
         await moveBoats(sailBoat1, count);
